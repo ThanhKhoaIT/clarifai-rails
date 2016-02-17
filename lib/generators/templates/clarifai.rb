@@ -1,7 +1,7 @@
 Clarifai::Rails.setup do |config|
 
-  config.client_id = ""
+  config.client_id = "your clarifai client id"
 
-  config.client_secret = ""
+  config.client_secret = "your clarifai client secret"
 
 end

@@ -22,7 +22,94 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Initialize
+
+    $ rails g clarifai:install
+
+### Config Client ID, Client Secret
+
+Insert your application info in ```config/initializers/clarifai.rb```
+
+### How to detect image
+
+```ruby
+Clarifai::Rails::Detector.new(image_url).image
+```
+
+Return ```Clarifai::Rails::Image``` object
+
+### For multiple images
+
+```ruby
+Clarifai::Rails::Detector.new([image_url_1, image_url_2]).images
+```
+
+Return array ```Clarifai::Rails::Image``` object
+
+
+With ```image``` is ```Clarifai::Rails::Image``` object
+
+#### Get tags
+
+```
+image.tags
+```
+Return for you is a String array, it is tags list
+
+#### Get tags with percent in image
+
+```
+image.tags_with_percent
+```
+Return is a Hash with key is tag and value is percent
+
+#### Get url
+
+```
+image.url
+```
+Return ia a String
+
+#### Get docid
+
+```
+image.docid
+```
+Return ia a Number
+
+#### Get docid_str
+
+```
+image.docid_str
+```
+Return ia a String
+
+#### Check status
+
+```
+image.success?
+```
+AND
+
+```
+image.error?
+```
+
+#### Get status_code
+
+```
+image.status_code
+```
+Return ia a String
+
+Can you see more info at https://developer.clarifai.com/docs/status_codes
+
+#### Get status_msg
+
+```
+image.status_messages
+```
+Return ia a String
 
 ## Development
 
@@ -32,7 +119,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/clarifai-rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ThanhKhoaIT/clarifai-rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License

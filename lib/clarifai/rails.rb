@@ -4,6 +4,7 @@ module Clarifai
     autoload :Token, "clarifai/rails/token"
     autoload :Detector, "clarifai/rails/detector"
     autoload :Image, "clarifai/rails/image"
+    autoload :Error, "clarifai/rails/error"
 
     def self.setup
       yield self

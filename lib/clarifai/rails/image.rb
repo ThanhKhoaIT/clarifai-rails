@@ -15,15 +15,14 @@ module Clarifai
       end
 
       def tags
-        return nil if is_error?
-        json[:result]["tag"]["classes"]
+        raise error if error?
+        result["tag"]["classes"]
       end
 
       def tags_with_percent
-        return nil if is_error?
         tags_hash = {}
         tags.each_with_index do |tag, index|
-          tags_hash["#{tag}"] = json[:result]["tag"]["probs"][index]
+          tags_hash["#{tag}"] = result["tag"]["probs"][index]
         end
         tags_hash.symbolize_keys
       end
@@ -37,20 +36,28 @@ module Clarifai
       end
 
       def docid_str
-        json[:result]["docid_str"]
+        result["docid_str"]
       end
 
-      def is_error?
-        status_code != "OK"
+      def error
+        Clarifai::Rails::Error.detector(status_code)
       end
 
-      def is_success?
-        status_code == "OK"
+      def error?
+        error.present?
       end
 
-      protected
+      def success?
+        error.blank?
+      end
+
+      private
 
       attr_reader :json
+
+      def result
+        json[:result]
+      end
 
     end
   end
