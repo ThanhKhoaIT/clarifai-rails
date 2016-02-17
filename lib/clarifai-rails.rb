@@ -1,0 +1,1 @@
+require "clarifai/rails"

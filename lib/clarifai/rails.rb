@@ -1,10 +1,9 @@
-require 'net/http'
-require "clarifai/rails/version"
-
 module Clarifai
   module Rails
 
     autoload :Token, "clarifai/rails/token"
+    autoload :Detector, "clarifai/rails/detector"
+    autoload :Image, "clarifai/rails/image"
 
     def self.setup
       yield self
@@ -17,5 +16,3 @@ module Clarifai
 
   end
 end
-
-require "clarifai/rails/token"
