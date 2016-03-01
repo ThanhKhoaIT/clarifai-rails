@@ -10,10 +10,11 @@ module Clarifai
       yield self
     end
 
-    mattr_accessor :client_id, :client_secret
+    mattr_accessor :client_id, :client_secret, :tag_url
 
     @@client_id = nil
     @@client_secret = nil
+    @@tag_url = "https://api.clarifai.com/v1/tag"
 
   end
 end
