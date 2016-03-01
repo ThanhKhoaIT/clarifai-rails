@@ -2,14 +2,12 @@
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/clarifai/rails`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'clarifai-rails'
+  gem 'clarifai-rails'
 ```
 
 And then execute:
@@ -33,7 +31,7 @@ Insert your application info in ```config/initializers/clarifai.rb```
 ### How to detect image
 
 ```ruby
-Clarifai::Rails::Detector.new(image_url).image
+  Clarifai::Rails::Detector.new(image_url).image
 ```
 
 Return ```Clarifai::Rails::Image``` object
@@ -41,64 +39,75 @@ Return ```Clarifai::Rails::Image``` object
 ### For multiple images
 
 ```ruby
-Clarifai::Rails::Detector.new([image_url_1, image_url_2]).images
+  Clarifai::Rails::Detector.new([image_url_1, image_url_2]).images
 ```
 
 Return array ```Clarifai::Rails::Image``` object
 
+### If you want to download images before detect (Facebook images, ...)
+
+```ruby
+  clarifai_detector = Clarifai::Rails::Detector.new([image_url_1, image_url_2])
+  clarifai_detector.need_download!
+  clarifai_detector.images
+```
+
+Return array ```Clarifai::Rails::Image``` object
+
+### Note
 
 With ```image``` is ```Clarifai::Rails::Image``` object
 
 #### Get tags
 
-```
-image.tags
+```ruby
+  image.tags
 ```
 Return for you is a String array, it is tags list
 
 #### Get tags with percent in image
 
-```
-image.tags_with_percent
+```ruby
+  image.tags_with_percent
 ```
 Return is a Hash with key is tag and value is percent
 
 #### Get url
 
-```
-image.url
+```ruby
+  image.url
 ```
 Return ia a String
 
 #### Get docid
 
-```
-image.docid
+```ruby
+  image.docid
 ```
 Return ia a Number
 
 #### Get docid_str
 
-```
-image.docid_str
+```ruby
+  image.docid_str
 ```
 Return ia a String
 
 #### Check status
 
-```
-image.success?
+```ruby
+  image.success?
 ```
 AND
 
-```
-image.error?
+```ruby
+  image.error?
 ```
 
 #### Get status_code
 
-```
-image.status_code
+```ruby
+  image.status_code
 ```
 Return ia a String
 
@@ -106,8 +115,8 @@ Can you see more info at https://developer.clarifai.com/docs/status_codes
 
 #### Get status_msg
 
-```
-image.status_messages
+```ruby
+  image.status_messages
 ```
 Return ia a String
 

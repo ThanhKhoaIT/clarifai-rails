@@ -5,16 +5,16 @@ module Clarifai
   module Rails
     class Detector
 
-      def initialize(urls, agent_protected=false)
+      def initialize(urls, download=false)
         raise "Input data not supported! (String Array or String only)" unless urls.is_a?(Array) || urls.is_a?(String)
 
         @urls = urls.is_a?(Array) ? urls : [urls]
-        @agent_protected = agent_protected
+        @download = download
         $clarifai_token_expire ||= Time.current
       end
 
-      def is_protected!
-        @agent_protected = true
+      def need_download!
+        @download = true
         self
       end
 
@@ -55,7 +55,7 @@ module Clarifai
 
       def fetch
         new_token if $clarifai_token_expire <= Time.current
-        @agent_protected ? urls_protected : urls_unprotected
+        @download ? urls_protected : urls_unprotected
       end
 
       def urls_unprotected
