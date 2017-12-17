@@ -5,31 +5,25 @@ module Clarifai
   module Rails
     class Detector
 
-      def initialize(urls, download=false)
-        raise "Input data not supported! (String Array or String only)" unless urls.is_a?(Array) || urls.is_a?(String)
-
+      def initialize(urls, opts={})
+        raise 'Input data not supported! (String Array or String only)' unless valid_params?(urls)
         @urls = urls.is_a?(Array) ? urls : [urls]
-        @download = download
-        $clarifai_token_expire ||= Time.current
-      end
-
-      def need_download!
-        @download = true
-        self
+        @model_code = opts[:model] || Clarifai::Rails.model_code
+        raise 'Model need to set' if @model_code.blank?
       end
 
       def to_hash
-        @data_urls = fetch if @data_urls.blank?
+        @data_urls ||= fetch
         @data_urls.is_a?(Hash) ? @data_urls : JSON.parse(@data_urls).symbolize_keys
       end
 
       def results
-        to_hash[:results]
+        to_hash[:outputs]
       end
 
       def images
-        results.map do |json|
-          Clarifai::Rails::Image.new(json)
+        results.map do |image|
+          Clarifai::Rails::Image.new(image)
         end
       end
 
@@ -40,7 +34,7 @@ module Clarifai
       # Status method
 
       def error
-        Clarifai::Rails::Error.detector(to_hash[:status_code])
+        Clarifai::Rails::Error.detector(to_hash[:status])
       end
 
       def error?
@@ -52,34 +46,24 @@ module Clarifai
       end
 
       private
+      attr_reader :urls, :model_code
+
+      def endpoint
+        "#{Clarifai::Rails.tag_url}/#{model_code}/outputs"
+      end
+
+      def valid_params?(urls)
+        urls.is_a?(Array) || urls.is_a?(String)
+      end
 
       def fetch
-        new_token if $clarifai_token_expire <= Time.current
-        @download ? urls_protected : urls_unprotected
+        params = { inputs: urls.map{ |url| url_data(url) } }
+        result = RestClient.post(endpoint, params.to_json, Authorization: "Key #{Clarifai::Rails.api_key}")
+        JSON.parse(result).symbolize_keys
       end
 
-      def urls_unprotected
-        params_string = @urls.join("&url=")
-        response = open("#{Clarifai::Rails.tag_url}?url=#{params_string}", "Authorization" => "Bearer #{$clarifai_token[:access_token]}")
-        response.read
-      end
-
-      def urls_protected
-        data = { results: [], status_code: nil }
-        @urls.each do |url|
-          result = RestClient.post( Clarifai::Rails.tag_url,
-                                   { encoded_data: File.new(open(url)) },
-                                   Authorization: "Bearer #{$clarifai_token[:access_token]}")
-          json = JSON.parse(result).symbolize_keys
-          data[:results] << json[:results].first
-          data[:status_code] = json[:status_code]
-        end
-        data
-      end
-
-      def new_token
-        $clarifai_token = Clarifai::Rails::Token.new.create.symbolize_keys
-        $clarifai_token_expire = Time.current + $clarifai_token[:expires_in]
+      def url_data(url)
+        { data: { image: { url: url } } }
       end
 
     end

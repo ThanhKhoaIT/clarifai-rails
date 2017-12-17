@@ -7,36 +7,32 @@ module Clarifai
       end
 
       def docid
-        json[:docid]
+        json[:id]
       end
 
       def url
-        json[:url]
+        json[:input]['data']['image']['url']
+      rescue
+        nil
       end
 
-      def tags
+      def concepts
         raise error if error?
-        result["tag"]["classes"]
+        data[:concepts].map{ |item| item['name'] }
       end
 
-      def tags_with_percent
-        tags_hash = {}
-        tags.each_with_index do |tag, index|
-          tags_hash["#{tag}"] = result["tag"]["probs"][index]
-        end
-        tags_hash.symbolize_keys
+      def concepts_with_percent
+        data[:concepts].map do |item|
+          [item['name'], item['value']]
+        end.to_h
       end
 
       def status_code
-        json[:status_code]
+        status[:code]
       end
 
       def status_messages
-        json[:status_msg]
-      end
-
-      def docid_str
-        result["docid_str"]
+        status[:description]
       end
 
       def error
@@ -55,8 +51,12 @@ module Clarifai
 
       attr_reader :json
 
-      def result
-        json[:result]
+      def data
+        json[:data].symbolize_keys
+      end
+
+      def status
+        json[:status].symbolize_keys
       end
 
     end

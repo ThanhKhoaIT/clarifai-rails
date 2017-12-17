@@ -1,7 +1,3 @@
-# Clarifai::Rails
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/clarifai/rails`. To experiment with that code, run `bin/console` for an interactive prompt.
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -24,7 +20,7 @@ Or install it yourself as:
 
     $ rails g clarifai:install
 
-### Config Client ID, Client Secret
+### Config API-KEY and Model code
 
 Insert your application info in ```config/initializers/clarifai.rb```
 
@@ -32,6 +28,11 @@ Insert your application info in ```config/initializers/clarifai.rb```
 
 ```ruby
   Clarifai::Rails::Detector.new(image_url).image
+```
+
+Custom model code
+```ruby
+  Clarifai::Rails::Detector.new(image_url, model_code).image
 ```
 
 Return ```Clarifai::Rails::Image``` object
@@ -42,14 +43,9 @@ Return ```Clarifai::Rails::Image``` object
   Clarifai::Rails::Detector.new([image_url_1, image_url_2]).images
 ```
 
-Return array ```Clarifai::Rails::Image``` object
-
-### If you want to download images before detect (Facebook images, ...)
-
+Custom model code
 ```ruby
-  clarifai_detector = Clarifai::Rails::Detector.new([image_url_1, image_url_2])
-  clarifai_detector.need_download!
-  clarifai_detector.images
+  Clarifai::Rails::Detector.new([image_url_1, image_url_2], model_code).images
 ```
 
 Return array ```Clarifai::Rails::Image``` object
@@ -58,17 +54,17 @@ Return array ```Clarifai::Rails::Image``` object
 
 With ```image``` is ```Clarifai::Rails::Image``` object
 
-#### Get tags
+#### Get concepts
 
 ```ruby
-  image.tags
+  image.concepts
 ```
-Return for you is a String array, it is tags list
+Return for you is a String array, it is concepts list
 
-#### Get tags with percent in image
+#### Get concepts with percent in image
 
 ```ruby
-  image.tags_with_percent
+  image.concepts_with_percent
 ```
 Return is a Hash with key is tag and value is percent
 
@@ -77,21 +73,16 @@ Return is a Hash with key is tag and value is percent
 ```ruby
   image.url
 ```
-Return ia a String
+Return is a String
 
 #### Get docid
 
 ```ruby
   image.docid
 ```
-Return ia a Number
+Return is a Number
 
-#### Get docid_str
-
-```ruby
-  image.docid_str
-```
-Return ia a String
+Return is a String
 
 #### Check status
 
@@ -109,7 +100,7 @@ AND
 ```ruby
   image.status_code
 ```
-Return ia a String
+Return is a String
 
 Can you see more info at https://developer.clarifai.com/docs/status_codes
 
@@ -118,7 +109,7 @@ Can you see more info at https://developer.clarifai.com/docs/status_codes
 ```ruby
   image.status_messages
 ```
-Return ia a String
+Return is a String
 
 ## Development
 
